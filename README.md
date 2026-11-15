@@ -2,11 +2,13 @@
 
 App instalável (PWA) para iPhone e computador: roteiro dia a dia, feiras de Natal, mapa com ruas e rota a pé, GPS, radar "perto de mim", check-in automático, compras e checklist.
 
+**Site:** https://matheusftorres.github.io/europa-2026/ (código em https://github.com/matheusftorres/europa-2026, publicado automaticamente pelo GitHub Actions a cada envio para `main`).
+
 ## Instalar no iPhone
-1. Abra o endereço do site no **Safari**.
+1. Abra https://matheusftorres.github.io/europa-2026/ no **Safari**.
 2. Toque em Compartilhar → **Adicionar à Tela de Início**.
 3. Abra pelo ícone e, na aba **Perto**, toque em **Ativar localização** (permitir "Ao Usar o App").
-4. Antes de viajar, com Wi-Fi, abra o mapa de cada cidade e aproxime nos bairros do roteiro: os mapas vistos ficam guardados para uso sem internet.
+4. Roteiro, horários, feiras, compras e lista funcionam sem internet. O fundo do mapa depende da fonte: com as camadas do OpenStreetMap (padrão, sem chave), o mapa precisa de internet; com a chave da CARTO configurada, os trechos vistos com Wi-Fi antes da viagem ficam guardados para uso sem internet.
 
 ## Dados: duas versões
 - `private/itineraryData.full.js` — versão completa, com códigos de reserva. Fica só no projeto do Claude ("Fase 2 - itineraryData.js"). **Nunca vai para o GitHub** (está no .gitignore).
