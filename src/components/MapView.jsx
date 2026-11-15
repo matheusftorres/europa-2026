@@ -128,7 +128,7 @@ export default function MapView({ day, selectedPlaceId, onSelectPlace, gps, inse
   const pad = { top: insetTop + 56, bottom: insetBottom + 24, left: insetLeft + 32, right: 32 };
 
   return (
-    <div className={`map-shell relative h-full w-full ${style === 'night' ? 'map-night' : 'map-day'}`}>
+    <div className={`map-shell relative isolate z-0 h-full w-full ${style === 'night' ? 'map-night' : 'map-day'}`}>
       <MapContainer center={[framePts[0]?.lat ?? 48.2, framePts[0]?.lng ?? 16.37]} zoom={14} zoomControl={false} className="h-full w-full" attributionControl={false}>
         <TileLayer key={style} url={TILES[style].url} className={TILES[style].className || ''} maxZoom={TILES[style].maxZoom} />
         <Camera points={framePts} selected={selected && selected.city === city ? selected : null} pad={pad} follow={follow} user={gps.pos} />
