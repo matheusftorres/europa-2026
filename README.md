@@ -21,7 +21,8 @@ App instalável (PWA) para iPhone e computador: roteiro dia a dia, feiras de Nat
 Check-ins e checklist ficam salvos no aparelho e não se perdem com as atualizações.
 
 ## Serviços externos (gratuitos, uso leve)
-- Mapa: quadros © OpenStreetMap e © CARTO (estilos Dark Matter e Voyager).
+- Mapa: sem chave, camadas padrão do OpenStreetMap (tile.openstreetmap.org), só com internet, pois a política da OSMF não permite uso offline; o modo noite é um filtro de cor.
+  Com uma chave gratuita da CARTO salva como variável do repositório `CARTO_KEY` (Settings → Secrets and variables → Actions → Variables), o build passa a usar Dark Matter e Voyager, guardados no aparelho. Restrinja a chave ao domínio matheusftorres.github.io no painel da CARTO.
 - Rota a pé: OSRM do FOSSGIS (routing.openstreetmap.de), uma consulta por dia/cidade, guardada no aparelho.
 - Geocodificação de reserva: Nominatim (OpenStreetMap), só para locais sem coordenada, 1 consulta por segundo.
 
@@ -33,7 +34,7 @@ Check-ins e checklist ficam salvos no aparelho e não se perdem com as atualiza�
 
 ## Estrutura
     src/App.jsx                  layout: tela dividida (computador) ou mapa + painel deslizante + abas (iPhone)
-    src/components/MapView       Leaflet: quadros CARTO, pinos do dia, rota a pé, posição do GPS
+    src/components/MapView       Leaflet: camadas OSM ou CARTO, pinos do dia, rota a pé (trechos de transporte pontilhados), posição do GPS
     src/components/NearbyPanel   radar: próxima parada, locais por distância e direção, check-in automático
     src/components/Timeline      linha do tempo do dia, check-in, trens, distância até cada parada
     src/components/PlaceDetail   detalhes, horários da feira, links para Apple Mapas / Google Maps

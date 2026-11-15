@@ -44,7 +44,7 @@ export default defineConfig(({ mode }) => {
           runtimeCaching: [
             {
               // Mapas já vistos ficam guardados para uso sem internet (até 3.000 quadros, 45 dias).
-              urlPattern: /^https:\/\/[a-d]\.basemaps\.cartocdn\.com\//,
+              urlPattern: /^https:\/\/([a-d]\.)?basemaps\.cartocdn\.com\//,
               handler: 'CacheFirst',
               options: { cacheName: 'map-tiles', expiration: { maxEntries: 3000, maxAgeSeconds: 60 * 60 * 24 * 45 }, cacheableResponse: { statuses: [0, 200] } },
             },

@@ -5,13 +5,26 @@ import { LocateFixed, Moon, Sun, Layers } from 'lucide-react';
 import { PLACES } from '../data/itineraryData.js';
 import { cityName, parseItem } from '../lib/places.js';
 import { footRoute } from '../lib/routing.js';
-import { formatDistance } from '../lib/geo.js';
+import { distanceM, formatDistance } from '../lib/geo.js';
 
-const TILES = {
-  night: { url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', label: 'Mapa claro' },
-  day: { url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', label: 'Mapa escuro' },
+/*
+ * Fundo do mapa.
+ * - Com chave da CARTO (variável VITE_CARTO_KEY no build): mapas Dark Matter e Voyager, guardados no aparelho.
+ * - Sem chave: camadas padrão do OpenStreetMap, sem guardar para uso offline (a política da OSMF não permite).
+ *   O modo noite escurece essas camadas com filtro de cor.
+ */
+const CARTO_KEY = import.meta.env.VITE_CARTO_KEY || '';
+export const USING_CARTO = Boolean(CARTO_KEY);
+const TILES = USING_CARTO ? {
+  night: { url: `https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png?key=${CARTO_KEY}`, maxZoom: 20, label: 'Mapa claro' },
+  day: { url: `https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${CARTO_KEY}`, maxZoom: 20, label: 'Mapa escuro' },
+} : {
+  night: { url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', maxZoom: 19, className: 'tiles-dark', label: 'Mapa claro' },
+  day: { url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', maxZoom: 19, label: 'Mapa escuro' },
 };
-const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
+/** Acima desta distância entre paradas seguidas, o trecho é de transporte (trem, metrô, RER), não de caminhada. */
+const TRANSIT_GAP_M = 2500;
 
 function pinIcon({ n, market, selected, optional, dim }) {
   const size = selected ? 34 : 26;
@@ -81,14 +94,33 @@ export default function MapView({ day, selectedPlaceId, onSelectPlace, gps, inse
     return out;
   }, [day, city]);
 
+  // Divide o percurso em trechos a pé; saltos longos (RER, trem, metrô) ficam como ligação de transporte.
+  const legs = useMemo(() => {
+    const walks = []; const transit = [];
+    let cur = [];
+    walkPts.forEach((pt, i) => {
+      const prev = walkPts[i - 1];
+      if (prev && distanceM(prev, pt) > TRANSIT_GAP_M) {
+        transit.push([[prev.lat, prev.lng], [pt.lat, pt.lng]]);
+        if (cur.length > 1) walks.push(cur);
+        cur = [];
+      }
+      cur.push(pt);
+    });
+    if (cur.length > 1) walks.push(cur);
+    return { walks, transit };
+  }, [walkPts]);
+
   useEffect(() => {
     let alive = true;
     setRoute(null);
-    if (walkPts.length < 2) { setRouteState('idle'); return undefined; }
+    if (!legs.walks.length) { setRouteState('idle'); return undefined; }
     setRouteState('loading');
-    footRoute(walkPts).then((r) => { if (alive) { setRoute(r); setRouteState('ok'); } }).catch(() => { if (alive) setRouteState('offline'); });
+    Promise.all(legs.walks.map((w) => footRoute(w)))
+      .then((rs) => { if (alive) { setRoute({ distance: rs.reduce((a, r) => a + r.distance, 0), lines: rs.map((r) => r.line) }); setRouteState('ok'); } })
+      .catch(() => { if (alive) setRouteState('offline'); });
     return () => { alive = false; };
-  }, [walkPts]);
+  }, [legs]);
 
   const framePts = (() => { const core = stops.filter((s) => !s.logistics); return (core.length >= 2 ? core : stops).map((s) => s.p); })();
   const selected = PLACES[selectedPlaceId];
@@ -98,13 +130,16 @@ export default function MapView({ day, selectedPlaceId, onSelectPlace, gps, inse
   return (
     <div className={`map-shell relative h-full w-full ${style === 'night' ? 'map-night' : 'map-day'}`}>
       <MapContainer center={[framePts[0]?.lat ?? 48.2, framePts[0]?.lng ?? 16.37]} zoom={14} zoomControl={false} className="h-full w-full" attributionControl={false}>
-        <TileLayer key={style} url={TILES[style].url} attribution={ATTRIBUTION} subdomains="abcd" maxZoom={20} />
+        <TileLayer key={style} url={TILES[style].url} className={TILES[style].className || ''} maxZoom={TILES[style].maxZoom} />
         <Camera points={framePts} selected={selected && selected.city === city ? selected : null} pad={pad} follow={follow} user={gps.pos} />
-        {route ? (
-          <Polyline positions={route.line} pathOptions={{ color: style === 'night' ? '#e3a72f' : '#8e2c3a', weight: 4, opacity: 0.75 }} />
-        ) : walkPts.length > 1 && (
-          <Polyline positions={walkPts.map((p) => [p.lat, p.lng])} pathOptions={{ color: '#8a96b8', weight: 2, dashArray: '4 8', opacity: 0.8 }} />
-        )}
+        {route ? route.lines.map((line, i) => (
+          <Polyline key={i} positions={line} pathOptions={{ color: style === 'night' ? '#e3a72f' : '#8e2c3a', weight: 4, opacity: 0.75 }} />
+        )) : legs.walks.map((w, i) => (
+          <Polyline key={i} positions={w.map((p) => [p.lat, p.lng])} pathOptions={{ color: '#8a96b8', weight: 2, dashArray: '4 8', opacity: 0.8 }} />
+        ))}
+        {legs.transit.map((seg, i) => (
+          <Polyline key={`t${i}`} positions={seg} pathOptions={{ color: style === 'night' ? '#9fb3e6' : '#22305a', weight: 2.5, dashArray: '2 7', opacity: 0.9 }} />
+        ))}
         {others.map(([id, p]) => (
           <Marker key={id} position={[p.lat, p.lng]} icon={pinIcon({ n: '', dim: true, market: p.category === 'christmas-market' })} eventHandlers={{ click: () => onSelectPlace(id) }} title={p.name} />
         ))}
@@ -129,7 +164,7 @@ export default function MapView({ day, selectedPlaceId, onSelectPlace, gps, inse
               className={`rounded-full px-3 py-1.5 text-[13px] font-semibold shadow ${c === city ? 'bg-beeswax text-night' : 'bg-night-2 text-snow'}`}>{cityName(c)}</button>
           ))}
           {routeState === 'ok' && route && (
-            <span className="rounded-full bg-night/85 px-3 py-1.5 text-[13px] text-snow shadow">Percurso a pé: {formatDistance(route.distance)}</span>
+            <span className="rounded-full bg-night/85 px-3 py-1.5 text-[13px] text-snow shadow">A pé: {formatDistance(route.distance)}{legs.transit.length ? ' + transporte (pontilhado)' : ''}</span>
           )}
           {routeState === 'offline' && <span className="rounded-full bg-night/85 px-3 py-1.5 text-[13px] text-snow/80 shadow">Sem rota agora: paradas ligadas em linha reta</span>}
         </div>
@@ -150,7 +185,7 @@ export default function MapView({ day, selectedPlaceId, onSelectPlace, gps, inse
       </div>
       <p className="absolute right-2 z-[500] rounded bg-snow/80 px-1.5 py-0.5 text-[10px] text-ink" style={{ bottom: insetBottom + 6 }}>
         © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" className="underline">OpenStreetMap</a>
-        {' '}© <a href="https://carto.com/attributions" target="_blank" rel="noreferrer" className="underline">CARTO</a>
+        {USING_CARTO && <>{' '}© <a href="https://carto.com/attributions" target="_blank" rel="noreferrer" className="underline">CARTO</a></>}
         {routeState === 'ok' ? <> · rota <a href="https://routing.openstreetmap.de/about.html" target="_blank" rel="noreferrer" className="underline">FOSSGIS OSRM</a></> : null}
       </p>
       {gps.error && (
