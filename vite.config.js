@@ -46,7 +46,7 @@ export default defineConfig(({ mode }) => {
               // Mapas já vistos ficam guardados para uso sem internet (até 3.000 quadros, 45 dias).
               urlPattern: /^https:\/\/([a-d]\.)?basemaps\.cartocdn\.com\//,
               handler: 'CacheFirst',
-              options: { cacheName: 'map-tiles', expiration: { maxEntries: 3000, maxAgeSeconds: 60 * 60 * 24 * 45 }, cacheableResponse: { statuses: [0, 200] } },
+              options: { cacheName: 'map-tiles', expiration: { maxEntries: 3000, maxAgeSeconds: 60 * 60 * 24 * 28 } /* termos CARTO 9.c(ii): no máx. 30 dias no aparelho */, cacheableResponse: { statuses: [0, 200] } },
             },
             {
               urlPattern: /^https:\/\/routing\.openstreetmap\.de\//,

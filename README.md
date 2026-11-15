@@ -8,7 +8,7 @@ App instalável (PWA) para iPhone e computador: roteiro dia a dia, feiras de Nat
 1. Abra https://matheusftorres.github.io/europa-2026/ no **Safari**.
 2. Toque em Compartilhar → **Adicionar à Tela de Início**.
 3. Abra pelo ícone e, na aba **Perto**, toque em **Ativar localização** (permitir "Ao Usar o App").
-4. Roteiro, horários, feiras, compras e lista funcionam sem internet. O fundo do mapa depende da fonte: com as camadas do OpenStreetMap (padrão, sem chave), o mapa precisa de internet; com a chave da CARTO configurada, os trechos vistos com Wi-Fi antes da viagem ficam guardados para uso sem internet.
+4. Roteiro, horários, feiras, compras e lista funcionam sem internet. O mapa usa a chave da CARTO (variável `CARTO_KEY`, já configurada): os trechos vistos com Wi-Fi ficam guardados no aparelho por até 28 dias (os termos da CARTO limitam o cache a 30 dias). Por isso, faça a "visita prévia" de cada cidade a partir de ~10/12/2026, para cobrir a viagem inteira (22/12 a 04/01).
 
 ## Dados: duas versões
 - `private/itineraryData.full.js` — versão completa, com códigos de reserva. Fica só no projeto do Claude ("Fase 2 - itineraryData.js"). **Nunca vai para o GitHub** (está no .gitignore).
@@ -23,8 +23,8 @@ App instalável (PWA) para iPhone e computador: roteiro dia a dia, feiras de Nat
 Check-ins e checklist ficam salvos no aparelho e não se perdem com as atualizações.
 
 ## Serviços externos (gratuitos, uso leve)
-- Mapa: sem chave, camadas padrão do OpenStreetMap (tile.openstreetmap.org), só com internet, pois a política da OSMF não permite uso offline; o modo noite é um filtro de cor.
-  Com uma chave gratuita da CARTO salva como variável do repositório `CARTO_KEY` (Settings → Secrets and variables → Actions → Variables), o build passa a usar Dark Matter e Voyager, guardados no aparelho. Restrinja a chave ao domínio matheusftorres.github.io no painel da CARTO.
+- Mapa: CARTO Dark Matter (noite) e Voyager (dia), com a chave gratuita não comercial (até 5 milhões de requisições/mês) salva na variável do repositório `CARTO_KEY` (Settings → Secrets and variables → Actions → Variables). A chave está restrita ao domínio matheusftorres.github.io no painel da CARTO. Créditos obrigatórios visíveis: © OpenStreetMap e © CARTO. Cache no aparelho limitado a 28 dias.
+  Sem a variável, o build cai para as camadas padrão do OpenStreetMap, só com internet (a política da OSMF não permite uso offline), com modo noite por filtro de cor.
 - Rota a pé: OSRM do FOSSGIS (routing.openstreetmap.de), uma consulta por dia/cidade, guardada no aparelho.
 - Geocodificação de reserva: Nominatim (OpenStreetMap), só para locais sem coordenada, 1 consulta por segundo.
 
