@@ -1,0 +1,6 @@
+node_modules/
+dist/
+dist-preview/
+# Versão completa dos dados, com códigos de reserva: NUNCA vai para o repositório público.
+private/
+.DS_Store
