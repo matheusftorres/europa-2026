@@ -56,6 +56,15 @@ export const CATEGORIES = {
 
 export const CHANGELOG = [
   {
+    "version": 5,
+    "date": "2026-11-15",
+    "items": [
+      "Castelo de Praga (26/12) comprado.",
+      "Horários de feriado conferidos: Relógio Astronômico, Strahov, São Nicolau, Santa Bárbara, Naschmarkt, Stephansdom, Sisi Museum e Hohensalzburg.",
+      "Stephansdom em 31/12: torres primeiro, interior a partir das 13h."
+    ]
+  },
+  {
     "version": 4,
     "date": "2026-11-15",
     "items": [
@@ -389,7 +398,7 @@ export const CITIES = {
 };
 
 export const DATA_VERSION = {
-  "number": 4,
+  "number": 5,
   "updatedAt": "2026-11-15"
 };
 
@@ -1091,7 +1100,7 @@ export const DAYS = [
         "placeId": "stephansdom",
         "priority": "MUST-SEE",
         "durationMin": 30,
-        "description": "Stephansdom iluminada (a feira da Stephansplatz e a do Rathausplatz já terão fechado em 26/12)."
+        "description": "Stephansdom iluminada por fora (interior turístico já fechado às 16h30; a feira da Stephansplatz e a do Rathausplatz terminaram em 26/12)."
       },
       {
         "time": "18:30",
@@ -1210,7 +1219,7 @@ export const DAYS = [
         "placeId": "stephansdom",
         "priority": "MUST-SEE",
         "durationMin": 60,
-        "description": "Interior e torres (horário de 31/12 a confirmar)."
+        "description": "Primeiro as torres (abertas 9h–18h); o interior com ingresso reabre às 13h (visitação fecha das 11h30 às 13h)."
       },
       {
         "time": "14:00",
@@ -1915,7 +1924,8 @@ export const PLACES = {
     "lat": 48.137633,
     "lng": 11.579979,
     "osm": "node/11829267544",
-    "verify": "Horário de 24/12 (hofbraeuhaus.de).",
+    "hours": "Diariamente 11h–24h (muenchen.de).",
+    "verify": "Horário especial de 24/12 não publicado; na dúvida, ligar +49 89 •••.",
     "geocodeQuery": "Hofbräuhaus München",
     "tags": [
       "cervejaria",
@@ -2140,7 +2150,9 @@ export const PLACES = {
     "lat": 50.086979,
     "lng": 14.420293,
     "osm": "way/255771323",
-    "verify": "Horário da torre nos feriados (prague.eu).",
+    "hours": "Abr–dez: 9h–20h. Natal 2026 (prague.eu): 24/12 9h–15h, 25/12 11h–18h, 26/12 9h–20h, 31/12 9h–16h, 01/01 11h–20h. Apóstolos de hora em hora, das 8h às 23h.",
+    "price": "Torre e interiores: 350 CZK (50% na primeira hora após a abertura, exceto 25/12 e 01/01).",
+    "verify": null,
     "geocodeQuery": "Staroměstská radnice Praha",
     "tags": [
       "relógio",
@@ -2291,7 +2303,9 @@ export const PLACES = {
     "lat": 50.086258,
     "lng": 14.389069,
     "osm": "relation/6268801",
-    "verify": "Horário da biblioteca nos feriados (strahovskyklaster.cz).",
+    "hours": "Biblioteca: diariamente 9h–17h (venda até 16h15). Fechada em 24 e 25/12; 31/12 9h–12h; 01/01 12h–17h (padrão oficial; 26/12 sem exceção).",
+    "price": "Biblioteca: 220 CZK.",
+    "verify": null,
     "geocodeQuery": "Strahovský klášter",
     "tags": [
       "mosteiro",
@@ -2320,7 +2334,9 @@ export const PLACES = {
     "lat": 50.087976,
     "lng": 14.403222,
     "osm": "way/7645355",
-    "verify": "Horário em 26/12.",
+    "hours": "Dezembro: seg–qui 9h–17h, sex–sáb 9h–16h, dom 9h–17h; última entrada 15 min antes. 26/12/2026 é sábado: fecha às 16h (entrar até 15h45).",
+    "price": "150 CZK.",
+    "verify": null,
     "geocodeQuery": "Kostel svatého Mikuláše Malá Strana",
     "tags": [
       "igreja",
@@ -2762,8 +2778,8 @@ export const PLACES = {
     "lat": 49.944929,
     "lng": 15.263647,
     "osm": "way/103176953",
-    "hours": "Inverno: 10h–16h30.",
-    "verify": "Horário em 28/12 (khfarnost.cz).",
+    "hours": "Dezembro: diariamente 10h–17h (28/12 sem exceção; 26/12 10h–14h30 e 31/12 10h–15h30 por missas/concerto). Janeiro: 10h–16h.",
+    "verify": null,
     "geocodeQuery": "Chrám svaté Barbory",
     "tags": [
       "UNESCO",
@@ -2824,8 +2840,8 @@ export const PLACES = {
     "lat": 48.19818,
     "lng": 16.362622,
     "osm": "way/29320733",
-    "hours": "Seg–sáb; fechado aos domingos e feriados.",
-    "verify": "Horário em 31/12.",
+    "hours": "Bancas: seg–sex 6h–21h (todas abertas ter–sex das 15h às 18h), sáb 6h–18h; fechado aos domingos e feriados. Restaurantes até 23h.",
+    "verify": null,
     "geocodeQuery": "Naschmarkt Wien",
     "tags": [
       "mercado",
@@ -2927,7 +2943,9 @@ export const PLACES = {
     "lat": 48.208492,
     "lng": 16.373127,
     "osm": "way/212496461",
-    "verify": "Horário do interior e das torres em 31/12 (stephanskirche.at).",
+    "hours": "Igreja aberta seg–sáb 6h–22h, dom/feriados 7h–22h (fora da visitação, só a área livre junto à entrada). Visitação turística ao interior: seg–sáb 9h–11h30 e 13h–16h30; dom/feriados 13h–16h30. Torres: 9h–18h.",
+    "price": "Interior € 8; All-Inclusive (interior, 2 torres, catacumbas e museu) € 29.",
+    "verify": "Calendário de dezembro (missas podem restringir a visita em 31/12): stephanskirche.at/calendar.php.",
     "geocodeQuery": "Stephansdom Wien",
     "tags": [
       "igreja",
@@ -3008,15 +3026,15 @@ export const PLACES = {
     ]
   },
   "hofburg-sisi": {
-    "name": "Hofburg: Sisi Museum e Apartamentos Imperiais (entrada pela Michaelerkuppel)",
+    "name": "Hofburg: Sisi Museum e Apartamentos Imperiais",
     "city": "viena",
     "category": "museum",
     "address": "Hofburg, Michaelerkuppel, 1010 Wien",
     "lat": 48.207609,
     "lng": 16.365981,
     "osm": "way/251669260",
-    "hours": "Aberto todos os dias, inclusive feriados. Sem horário marcado (Sisi Pass). Não há guarda-volumes.",
-    "verify": "Horário de 31/12 (sisimuseum-hofburg.at). O pino marca a passagem Michaelertor, sob a cúpula.",
+    "hours": "Diariamente 9h–17h30, inclusive feriados (última entrada 16h30; wien.info). Sem horário marcado (Sisi Pass). Não há guarda-volumes.",
+    "verify": "Entrada: desde 29/01/2026 a entrada provisória é pelo Kaisertor, com a bilheteria à esquerda (guias de viagem); o site oficial ainda cita a Michaelerkuppel. Conferir a sinalização na chegada.",
     "geocodeQuery": "Kaiserappartements Hofburg Wien",
     "tags": [
       "palácio",
@@ -3272,7 +3290,8 @@ export const PLACES = {
     "osm": "way/58379993",
     "hours": "Jan–abr e out–dez: 9h30–17h.",
     "price": "Incluída na Salzburg Card (avulso: Basis € 15,50 / All-Inclusive € 19,20, 2026).",
-    "verify": "Funcionamento em 01/01 (festung-hohensalzburg.at).",
+    "verify": null,
+    "notes": "Folheto oficial 2026: única exceção no inverno é 24/12 (interiores até 14h); 01/01 segue o horário normal. O funicular entra em revisão só a partir de 11/01/2027.",
     "geocodeQuery": "Festung Hohensalzburg",
     "tags": [
       "fortaleza",
@@ -3585,11 +3604,11 @@ export const PURCHASES = [
   {
     "id": "c-castelo",
     "title": "Castelo de Praga (26/12, válido 2 dias)",
-    "status": "reservado-pagar-depois",
+    "status": "comprado",
     "ref": "•••",
     "amount": "R$ 239,58",
     "placeId": "prazsky-hrad",
-    "action": "Cancelamento grátis até 25/12, 9h; conferir a data da cobrança"
+    "action": "Comprado. Levar o voucher da GetYourGuide no celular; válido por 2 dias seguidos a partir de 26/12."
   },
   {
     "id": "c-salzburg-card",
