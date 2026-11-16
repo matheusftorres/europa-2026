@@ -122,7 +122,14 @@ export default function MapView({ day, selectedPlaceId, onSelectPlace, gps, inse
     return () => { alive = false; };
   }, [legs]);
 
-  const framePts = (() => { const core = stops.filter((s) => !s.logistics); return (core.length >= 2 ? core : stops).map((s) => s.p); })();
+  // Enquadramento: com trecho de transporte no dia (ex.: RER até Paris), foca o maior trecho a pé.
+  const framePts = (() => {
+    if (legs.transit.length && legs.walks.length) {
+      const main = legs.walks.reduce((a, b) => (b.length > a.length ? b : a));
+      return main.map((pt) => PLACES[pt.id]);
+    }
+    const core = stops.filter((s) => !s.logistics); return (core.length >= 2 ? core : stops).map((s) => s.p);
+  })();
   const selected = PLACES[selectedPlaceId];
   const others = showAll ? Object.entries(PLACES).filter(([id, p]) => p.city === city && !stops.find((s) => s.id === id)) : [];
   const pad = { top: insetTop + 56, bottom: insetBottom + 24, left: insetLeft + 32, right: 32 };

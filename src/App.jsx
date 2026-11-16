@@ -11,6 +11,7 @@ import ChecklistPanel from './components/ChecklistPanel.jsx';
 import MapView from './components/MapView.jsx';
 import NearbyPanel from './components/NearbyPanel.jsx';
 import Toast from './components/Toast.jsx';
+import InstallHint from './components/InstallHint.jsx';
 import { useGeolocation } from './lib/useGeolocation.js';
 import { geocode } from './lib/geocode.js';
 import { distanceM } from './lib/geo.js';
@@ -170,6 +171,7 @@ export default function App() {
         </main>
         <Changelog open={showLog} onClose={() => setShowLog(false)} />
         <Toast toast={toast} onClose={closeToast} bottom={24} />
+        <InstallHint />
       </div>
     );
   }
@@ -197,6 +199,7 @@ export default function App() {
       <TabBar ref={tabbar} tab={tab} onTab={changeTab} />
       <Changelog open={showLog} onClose={() => setShowLog(false)} />
       <Toast toast={toast} onClose={closeToast} bottom={tabbarH + 12} />
+      <InstallHint />
     </div>
   );
 }
